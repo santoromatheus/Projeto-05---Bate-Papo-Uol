@@ -1,6 +1,5 @@
 /* Ao entrar no site, este deve carregar as mensagens do servidor e exibi-las conforme layout fornecido */
 /* Repetindo a operação a cada 3 segundos */
-let countTotalMessages = 0;
 let myUser = "";
 let userToReceive = "Todos";
 let typeOfMessage = "message";
@@ -30,12 +29,12 @@ function addFirstMessage () {
     element.classList.add("first");
 }
 
-function  runThroughtAnswer(answer) {
-    let checkNewMessage = countTotalMessages;
-    for( ; countTotalMessages < answer.data.length; countTotalMessages++) {
-        identifyTypeOfMessage(answer.data[countTotalMessages]);
+function runThroughtAnswer(answer) {
+    
+    for( let i = 0; i < answer.data.length; i++) {
+        identifyTypeOfMessage(answer.data[i]);
     }
-    scrollToFinalMessage(answer, checkNewMessage);
+    scrollToFinalMessage(answer);
 }
 
 function identifyTypeOfMessage(messageRegister) {
@@ -95,16 +94,12 @@ function actualize () {
     newPromisse.catch(actualizeError);
 }
 
-function scrollToFinalMessage(answer, checkNewMessage) {
-    console.log("entrei no scrool " + checkNewMessage);
-    if(checkNewMessage < answer.data.length) {
-        const messages = document.querySelectorAll('.message');
-        /* console.log(messages); */
-        const lastMessage = messages[messages.length-1];
-        /* console.log(lastMessage); */
-        lastMessage.scrollIntoView(false);       
-    }
-
+function scrollToFinalMessage(answer) {
+    const messages = document.querySelectorAll('.message');
+    /* console.log(messages); */
+    const lastMessage = messages[messages.length-1];
+    /* console.log(lastMessage); */
+    lastMessage.scrollIntoView(false);
 }
 
 function checkUserValidity() {
@@ -114,7 +109,7 @@ function checkUserValidity() {
 }
 
 function userRequisition() {
-    console.log(myUser);
+    /* console.log(myUser); */
     const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/participants`, myUser);
     requisicao.then(treatSuccess);
     requisicao.catch(treatError);
@@ -151,19 +146,19 @@ function iAmOn() {
     requisicao.catch(nowOff);
 }
 
-function stillOn() {
+function stillOn(answer) {
     console.log("I am still online");
 }
 
 function nowOff(error) {
-    console.log("Error durinf iAmOn function request. I am Off now");
-    console.log("Status code: " + error.response.status);
-	console.log("Mensagem de erro: " + error.response.data);
-    goToInitialScreen();
+    console.log("I am Off now");
+    console.log(error);
 }
 
 function sendMessageToChat() {
+    console.log("entrei no sendMEssage");
     const myMessageToGo = document.getElementById(`messageInput`);
+    console.log(`Mesagem pra enviar: ${myMessageToGo.value}`);
     const messageToSend = 
     {
         from: myUser.name, 
@@ -171,7 +166,30 @@ function sendMessageToChat() {
         text: myMessageToGo.value, 
         type: typeOfMessage
     };
+    console.log(`Mesagem pra enviar: ${messageToSend.from}, ${messageToSend.to}, ${messageToSend.text} e ${messageToSend.type}`);
     const request = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, messageToSend);
+    request.then(actualize);
+    request.catch(actualizeUsers);
+}
+
+function actualizeUsers() {
+    const messageToSend =
+    {   
+        from: "Bate Papo Uol", 
+        to: myUser.name, 
+        text: `${userToReceive} já saiu do chat`, 
+        type: "private_message"
+    };
+    const request = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, messageToSend);
+    request.then(actualize);
+    request.catch(informErrorInSendindMessage);
+}
+
+function informErrorInSendindMessage(error) {
+    console.log("Teve algum problema ao enviar a mensagem");
+    console.log("Status code: " + error.response.status);
+	console.log("Mensagem de erro: " + error.response.data);
+
 }
 
 function goToInitialScreen() {
