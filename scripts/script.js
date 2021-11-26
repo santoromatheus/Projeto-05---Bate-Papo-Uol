@@ -51,7 +51,7 @@ function identifyTypeOfMessage(messageRegister) {
 function showMessageTypeMessage(messageRegister) {
     const elementMain = document.querySelector("main");
     elementMain.innerHTML += `
-    <div class="message">
+    <div data-identifier="message" class="message">
         <p class="time">
             (${messageRegister.time})
         </p>
@@ -64,7 +64,7 @@ function showMessageTypeMessage(messageRegister) {
 function showMessageTypeStatus(messageRegister) {
     const elementMain = document.querySelector("main");
     elementMain.innerHTML += `
-    <div class="message signInOrSignOut">
+    <div data-identifier="message" class="message signInOrSignOut">
         <p class="time">
             (${messageRegister.time})
         </p>
@@ -78,7 +78,7 @@ function showMessageTypePrivate(messageRegister) {
     const elementMain = document.querySelector("main");
     if (messageRegister.to === myUser.name) {  
         elementMain.innerHTML += `
-            <div class="message private">
+            <div data-identifier="message" class="message private">
                 <p class="time">
                     (${messageRegister.time})
                 </p>
