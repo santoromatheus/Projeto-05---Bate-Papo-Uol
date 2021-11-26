@@ -11,65 +11,28 @@
     <title>Bate-Papo Uol</title>
 </head>
 <body>
-    <aside class="initialScreen hidden">
+    <aside class="initialScreen">
         <img class="logoUolInitialScreen" src="https://static1.purebreak.com.br/articles/6/92/41/6/@/355678-relembre-os-sites-que-faziam-sucesso-na-diapo-1.jpg" />
-        <input type="text" placeholder="Digite seu nome" class="inputName">
-        <input class="entryButton" type="button" value="Entrar">
+        <p class="errorRequest hidden">Nome já cadastrado. Tente outro.</p>
+        <input id="myUserInput" type="text" placeholder="Digite seu nome" class="inputName">
+        <input class="entryButton" type="button" value="Entrar" onclick="checkUserValidity()">
     </aside>
+
     <header>
         <img class="logoUol" src="https://static1.purebreak.com.br/articles/6/92/41/6/@/355678-relembre-os-sites-que-faziam-sucesso-na-diapo-1.jpg" />
         <ion-icon name="people" class="menuButton"></ion-icon>
     </header>
 
     <main>
-            <div class="message signInOrSignOut first">
-                <p class="time">
-                    (09:21:45)
-                </p>
-                <p>
-                    <strong class="senderOrRecipient"> João </strong> entra na sala...
-                </p>
-            </div>
-            <div class="message">
-                <p class="time">
-                    (09:22:28)
-                </p>
-                <p>
-                    <strong class="senderOrRecipient">João </strong> para <strong class="senderOrRecipient">Todos:</strong> Bom dia
-                </p>
-            </div>
-            <div class="message">
-                <p class="time">
-                    (09:22:38)
-                </p>
-                <p>
-                    <strong class="senderOrRecipient">Maria </strong> para <strong class="senderOrRecipient">João</strong> Oi João :)
-                </p>
-            </div>
-            <div class="message private">
-                <p class="time">
-                    (09:22:48)
-                </p>
-                <p>
-                    <strong class="senderOrRecipient">João</strong> reservadamente para <strong class="senderOrRecipient">Maria:</strong> Oi gatinha quer tc?
-                </p>
-            </div>
-            <div class="message signInOrSignOut">
-                <p class="time">
-                    (09:22:58)
-                </p>
-                <p>
-                    <strong class="senderOrRecipient"> Maria </strong> sai da sala...
-                </p>
-            </div>
+            
     </main>
 
     <footer>
             <div>
-                <input type="text" placeholder="Escreva aqui..." class="inputMessage">
+                <input id="messageInput" type="text" placeholder="Escreva aqui..." class="inputMessage">
                 <p class="recipientAndVisibility">Enviando para Maria (reservadamente)</p>
             </div>
-            <ion-icon name="paper-plane-outline" class="sendButton"></ion-icon>
+            <ion-icon name="paper-plane-outline" class="sendButton" onclick="sendMessageToChat()"></ion-icon>
     </footer>
 
     <aside class="menu hidden">
@@ -103,6 +66,7 @@
         </div>
     </aside>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
     <script src="./scripts/script.js"></script>
 </body>
