@@ -3,15 +3,70 @@
 let myUser = "";
 let userToReceive = "Todos";
 let typeOfMessage = "message";
+let auxTypeOfMessage = "Público";
 
 function turnOn () {
+    requestMessages();
+
+    actualizeUsers();
+
+    launchIntervalFunctions();
+}
+
+function actualizeUsers() {
+    const promisse = axios.get(`https://mock-api.driven.com.br/api/v4/uol/participants`);
+
+    promisse.then(runThroughtUsers);
+    promisse.catch(requestUsersError);
+}
+
+function runThroughtUsers(usersList) {
+    showTodosUser(); /* Colocar a opção "Todos" */
+    for( let i = 0; i < usersList.data.length; i++) {
+        showActiveUsers(usersList.data[i]);
+    } 
+}
+
+function requestUsersError(error) {
+    console.log("Teve algum problema ao solicitar usuarios");
+    console.log(error);
+}
+
+function showTodosUser() {
+    const elementListUsers = document.querySelector(".listContacts");
+    elementListUsers.innerHTML = `
+    <div data-identifier="participant" class="contact" onclick="selectContact(this)">
+        <div>
+            <ion-icon name="people" class="iconContact"></ion-icon>
+            <p class="user"> Todos</p>
+        </div>
+            <ion-icon name="checkmark" class="check hidden"></ion-icon>
+    </div>`;
+}
+
+function showActiveUsers(userActive){
+    const elementListUsers = document.querySelector(".listContacts");
+    elementListUsers.innerHTML += `
+    <div data-identifier="participant" class="contact" onclick="selectContact(this)">
+        <div>
+            <ion-icon name="person-circle" class="iconContact"></ion-icon>
+            <p class="user">${userActive.name}</p>
+        </div>
+        <ion-icon name="checkmark" class="check hidden"></ion-icon>
+    </div>`;
+}
+
+function requestMessages() {
     const promisse = axios.get(`https://mock-api.driven.com.br/api/v4/uol/messages`);
 
     promisse.then(showFirstAnswer);
-    promisse.catch(turnOnError);
+    promisse.catch(requestMessagesError);
+}
 
-    setInterval(actualize, 3000);
+function launchIntervalFunctions() {
+    setInterval(actualizeMessages, 3000);
     setInterval(iAmOn, 5000);
+    setInterval(actualizeUsers, 10000);
 }
 
 function showFirstAnswer(answer) {
@@ -19,7 +74,6 @@ function showFirstAnswer(answer) {
     identifyTypeOfMessage(answer.data[0]);
     /* Insert the margin-up that the first message has */
     addFirstMessage();
-    countTotalMessages++;
     /* Access every message that the server sent */
     runThroughtAnswer(answer);
 }
@@ -30,7 +84,8 @@ function addFirstMessage () {
 }
 
 function runThroughtAnswer(answer) {
-    
+    const elementMain = document.querySelector("main");
+    elementMain.innerHTML = "";
     for( let i = 0; i < answer.data.length; i++) {
         identifyTypeOfMessage(answer.data[i]);
     }
@@ -75,7 +130,7 @@ function showMessageTypeStatus(messageRegister) {
 
 function showMessageTypePrivate(messageRegister) {
     const elementMain = document.querySelector("main");
-    if (messageRegister.to === myUser.name) {  
+    if (messageRegister.to === myUser.name || messageRegister.from === myUser.name) {  
         elementMain.innerHTML += `
             <div data-identifier="message" class="message private">
                 <p class="time">
@@ -88,17 +143,16 @@ function showMessageTypePrivate(messageRegister) {
     }
 }
 
-function actualize () {
+function actualizeMessages () {
     const newPromisse = axios.get(`https://mock-api.driven.com.br/api/v4/uol/messages`);
     newPromisse.then(runThroughtAnswer);
-    newPromisse.catch(actualizeError);
+    newPromisse.catch(actualizeMessagesError);
 }
 
 function scrollToFinalMessage(answer) {
     const messages = document.querySelectorAll('.message');
-    /* console.log(messages); */
     const lastMessage = messages[messages.length-1];
-    /* console.log(lastMessage); */
+    
     lastMessage.scrollIntoView(false);
 }
 
@@ -109,7 +163,6 @@ function checkUserValidity() {
 }
 
 function userRequisition() {
-    /* console.log(myUser); */
     const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/participants`, myUser);
     requisicao.then(treatSuccess);
     requisicao.catch(treatError);
@@ -128,14 +181,14 @@ function treatSuccess(answer) {
     turnOn();
 }
 
-function turnOnError(error) {
-    console.log("error during the turnOn function request");
+function requestMessagesError(error) {
+    console.log("error during the requestMessagesError function request");
     console.log("Status code: " + error.response.status);
 	console.log("Mensagem de erro: " + error.response.data);
 }
 
-function actualizeError(error) {
-    console.log("error during the actualize function request");
+function actualizeMessagesError(error) {
+    console.log("error during the actualizeMessages function request");
     console.log("Status code: " + error.response.status);
 	console.log("Mensagem de erro: " + error.response.data);
 }
@@ -153,12 +206,14 @@ function stillOn(answer) {
 function nowOff(error) {
     console.log("I am Off now");
     console.log(error);
+    goToInitialScreen();
 }
 
 function sendMessageToChat() {
-    console.log("entrei no sendMEssage");
     const myMessageToGo = document.getElementById(`messageInput`);
-    console.log(`Mesagem pra enviar: ${myMessageToGo.value}`);
+    
+    chekTodosMessageType();
+    
     const messageToSend = 
     {
         from: myUser.name, 
@@ -166,13 +221,25 @@ function sendMessageToChat() {
         text: myMessageToGo.value, 
         type: typeOfMessage
     };
-    console.log(`Mesagem pra enviar: ${messageToSend.from}, ${messageToSend.to}, ${messageToSend.text} e ${messageToSend.type}`);
-    const request = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, messageToSend);
-    request.then(actualize);
-    request.catch(actualizeUsers);
+    sendMessageToServer(messageToSend);
+    myMessageToGo.value = "";
 }
 
-function actualizeUsers() {
+function chekTodosMessageType() {
+    if(userToReceive === "Todos") {
+        typeOfMessage = "message";
+        auxTypeOfMessage = "Público";
+        document.querySelector(".recipientAndVisibility").innerHTML = `Enviando para ${userToReceive} (${auxTypeOfMessage})`;
+    }
+}
+
+function sendMessageToServer(messageToSend) {
+    const request = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, messageToSend);
+    request.then(actualizeMessages);
+    request.catch(errorGoActualizeUsers);
+}
+
+function errorGoActualizeUsers() {
     const messageToSend =
     {   
         from: "Bate Papo Uol", 
@@ -180,8 +247,12 @@ function actualizeUsers() {
         text: `${userToReceive} já saiu do chat`, 
         type: "private_message"
     };
+    informUserIsNoMoreHere(messageToSend);
+}
+
+function informUserIsNoMoreHere(messageToSend) {
     const request = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, messageToSend);
-    request.then(actualize);
+    request.then(actualizeMessages);
     request.catch(informErrorInSendindMessage);
 }
 
@@ -189,7 +260,6 @@ function informErrorInSendindMessage(error) {
     console.log("Teve algum problema ao enviar a mensagem");
     console.log("Status code: " + error.response.status);
 	console.log("Mensagem de erro: " + error.response.data);
-
 }
 
 function goToInitialScreen() {
@@ -224,8 +294,22 @@ function vanishWithChecks(checks) {
 function checkSelected(element) {
     const checkImg = element.querySelector(".check");
     if(checkImg.classList.contains("hidden")) {
+        defineUserOrType(element);
         checkImg.classList.toggle("hidden");
     }
+}
+
+function defineUserOrType(element){
+    if(element.classList.contains("contact")){
+        userToReceive = element.querySelector(".user").innerHTML;
+    } else if (element.querySelector(".typeOfMessageToSend").innerHTML === "Público"){
+        typeOfMessage = "message";
+        auxTypeOfMessage = "Público";
+    } else if (element.querySelector(".typeOfMessageToSend").innerHTML === "Reservadamente"){
+        typeOfMessage = "private_message";
+        auxTypeOfMessage = "reservadamente";
+    }
+    document.querySelector(".recipientAndVisibility").innerHTML = `Enviando para ${userToReceive} (${auxTypeOfMessage})`;
 }
 
 function selectOption(element) {
