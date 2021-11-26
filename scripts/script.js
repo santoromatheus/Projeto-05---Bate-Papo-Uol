@@ -175,3 +175,52 @@ function sendMessageToChat() {
 function goToInitialScreen() {
     window.location.reload()
 }
+
+function openMenu() {
+    const fundo = document.querySelector(".fundoEscuro");
+    fundo.classList.toggle("hidden");
+    const menu = document.querySelector(".menu");
+    menu.classList.toggle("hidden");
+}
+
+function selectContact(element) {
+    const contacts = document.querySelector(".listContacts");
+    const checks = contacts.querySelectorAll(".check");
+    
+    vanishWithChecks(checks);
+
+    checkSelected(element);
+    
+}
+
+function vanishWithChecks(checks) {
+    for(let i = 0; i < checks.length; i++){
+        if(checks[i].classList.contains("hidden") === false) {
+            checks[i].classList.add("hidden");
+        }
+    }
+}
+
+function checkSelected(element) {
+    const checkImg = element.querySelector(".check");
+    if(checkImg.classList.contains("hidden")) {
+        checkImg.classList.toggle("hidden");
+    }
+}
+
+function selectOption(element) {
+    const options = document.querySelector(".listOptions");
+    const checks = options.querySelectorAll(".check");
+    
+    vanishWithChecks(checks);
+
+    checkSelected(element);
+}
+
+function closeMenu() {
+    const fundo = document.querySelector(".fundoEscuro");
+    fundo.classList.toggle("hidden");
+    const menu = document.querySelector(".menu");
+    menu.classList.toggle("hidden");
+}
+

@@ -11,7 +11,7 @@
     <title>Bate-Papo Uol</title>
 </head>
 <body>
-    <aside class="initialScreen">
+    <aside class="initialScreen hidden">
         <img class="logoUolInitialScreen" src="https://static1.purebreak.com.br/articles/6/92/41/6/@/355678-relembre-os-sites-que-faziam-sucesso-na-diapo-1.jpg" />
         <p class="errorRequest hidden">Nome já cadastrado. Tente outro.</p>
         <input id="myUserInput" type="text" placeholder="Digite seu nome" class="inputName">
@@ -20,7 +20,8 @@
 
     <header>
         <img class="logoUol" src="https://static1.purebreak.com.br/articles/6/92/41/6/@/355678-relembre-os-sites-que-faziam-sucesso-na-diapo-1.jpg" />
-        <ion-icon name="people" class="menuButton"></ion-icon>
+        <ion-icon onclick="openMenu()" name="people" class="menuButton" >
+        </ion-icon>
     </header>
 
     <main>
@@ -30,25 +31,29 @@
     <footer>
             <div>
                 <input id="messageInput" type="text" placeholder="Escreva aqui..." class="inputMessage">
-                <p class="recipientAndVisibility">Enviando para Maria (reservadamente)</p>
+                <p class="recipientAndVisibility">Enviando para Todos (público)</p>
             </div>
             <ion-icon data-identifier="send-message" name="paper-plane-outline" class="sendButton" onclick="sendMessageToChat()"></ion-icon>
     </footer>
+
+    <div class="fundoEscuro hidden" onclick="closeMenu()">
+
+    </div>
 
     <aside class="menu hidden">
         <div class="contactsHeader">
             <p>Escolha um contato <br> para enviar mensagem:</p>
         </div>
         <div class="listContacts">
-            <div class="contact">
+            <div class="contact" onclick="selectContact(this)">
                 <p><ion-icon name="people" class="iconContact"></ion-icon> Todos</p>
                 <ion-icon name="checkmark" class="check"></ion-icon>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="selectContact(this)">
                 <p><ion-icon name="person-circle" class="iconContact"></ion-icon> João</p>
                 <ion-icon name="checkmark" class="check hidden"></ion-icon>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="selectContact(this)">
                 <p><ion-icon name="person-circle" class="iconContact"></ion-icon> Maria</p>
                 <ion-icon name="checkmark" class="check hidden"></ion-icon>
             </div>
@@ -56,13 +61,15 @@
         <div class="visibilityHeader">
             <p>Escolha a visibilidade:</p>
         </div>
-        <div class="visibilityOption">
-            <p><ion-icon name="lock-open" class="iconVisibilityOption"></ion-icon> Público</p>
-            <ion-icon name="checkmark" class="check"></ion-icon>
-        </div>
-        <div class="visibilityOption">
-            <p><ion-icon name="lock-closed" class="iconVisibilityOption"></ion-icon> Reservadamente</p>
-            <ion-icon name="checkmark" class="check hidden"></ion-icon>
+        <div class="listOptions">
+            <div class="visibilityOption" onclick="selectOption(this)">
+                <p><ion-icon name="lock-open" class="iconVisibilityOption"></ion-icon> Público</p>
+                <ion-icon name="checkmark" class="check"></ion-icon>
+            </div>
+            <div class="visibilityOption" onclick="selectOption(this)">
+                <p><ion-icon name="lock-closed" class="iconVisibilityOption"></ion-icon> Reservadamente</p>
+                <ion-icon name="checkmark" class="check hidden"></ion-icon>
+            </div>
         </div>
     </aside>
 

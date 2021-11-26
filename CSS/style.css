@@ -14,7 +14,7 @@ body {
     height: 100%;
 
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     display: flex;
     justify-content: center;
 
@@ -242,9 +242,19 @@ footer > div {
 
     position: fixed;
     right: 0px;
-    z-index: 2;
+    z-index: 3;
 
     background-color: #FFFFFF;
+}
+
+.fundoEscuro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    z-index: 2;
+    
+    background: rgba(0, 0, 0, 0.6);  
 }
 
 .contactsHeader {
@@ -280,6 +290,8 @@ footer > div {
     justify-content: space-between;
     align-items: center;
     margin: 1px 0px;
+
+    cursor: pointer;
 }
 
 .contact > p {
@@ -349,7 +361,16 @@ footer > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    cursor: pointer;
 }
+
+
+
+.contact:hover, .visibilityOption:hover {
+    border: 3px solid green;
+}
+
 
 .shaded {
     background-color: rgba(0, 0, 0, 0.6);
