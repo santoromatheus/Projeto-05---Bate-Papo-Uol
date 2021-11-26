@@ -91,19 +91,20 @@ function showMessageTypePrivate(messageRegister) {
 
 function actualize () {
     const newPromisse = axios.get(`https://mock-api.driven.com.br/api/v4/uol/messages`);
-
     newPromisse.then(runThroughtAnswer);
     newPromisse.catch(actualizeError);
 }
 
 function scrollToFinalMessage(answer, checkNewMessage) {
+    console.log("entrei no scrool " + checkNewMessage);
     if(checkNewMessage < answer.data.length) {
         const messages = document.querySelectorAll('.message');
-        console.log(messages);
+        /* console.log(messages); */
         const lastMessage = messages[messages.length-1];
-        console.log(lastMessage);
+        /* console.log(lastMessage); */
         lastMessage.scrollIntoView(false);       
     }
+
 }
 
 function checkUserValidity() {
@@ -113,7 +114,8 @@ function checkUserValidity() {
 }
 
 function userRequisition() {
-    const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, myUser);
+    console.log(myUser);
+    const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/participants`, myUser);
     requisicao.then(treatSuccess);
     requisicao.catch(treatError);
 }
@@ -144,7 +146,7 @@ function actualizeError(error) {
 }
 
 function iAmOn() {
-    const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, myUser);
+    const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/status`, myUser);
     requisicao.then(stillOn);
     requisicao.catch(nowOff);
 }
