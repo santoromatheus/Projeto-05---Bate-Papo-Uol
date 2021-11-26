@@ -157,7 +157,7 @@ function nowOff(error) {
     console.log("Error durinf iAmOn function request. I am Off now");
     console.log("Status code: " + error.response.status);
 	console.log("Mensagem de erro: " + error.response.data);
-
+    goToInitialScreen();
 }
 
 function sendMessageToChat() {
@@ -170,4 +170,8 @@ function sendMessageToChat() {
         type: typeOfMessage
     };
     const request = axios.post(`https://mock-api.driven.com.br/api/v4/uol/messages`, messageToSend);
+}
+
+function goToInitialScreen() {
+    window.location.reload()
 }
