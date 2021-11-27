@@ -166,9 +166,18 @@ function userRequisition() {
     const requisicao = axios.post(`https://mock-api.driven.com.br/api/v4/uol/participants`, myUser);
     requisicao.then(treatSuccess);
     requisicao.catch(treatError);
+    loadingScreen();
+}
+
+function loadingScreen() {
+    document.querySelector(".inputName").classList.toggle("hidden");
+    document.querySelector(".entryButton").classList.toggle("hidden");
+    document.querySelector(".loading").classList.toggle("hidden");
+    document.querySelector(".entrying").classList.toggle("hidden");
 }
 
 function treatError(error) {
+    loadingScreen();
     const userDeniedMessage = document.querySelector(".errorRequest");
     if (userDeniedMessage.classList.contains("hidden") === true) {
         userDeniedMessage.classList.toggle("hidden");
@@ -176,6 +185,7 @@ function treatError(error) {
 }
 
 function treatSuccess(answer) {
+    loadingScreen();
     const userAccepted = document.querySelector(".initialScreen");
     userAccepted.classList.toggle("hidden");
     turnOn();
